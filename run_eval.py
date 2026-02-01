@@ -18,7 +18,7 @@ def main() -> None:
     ap.add_argument("--n_shots", type=int, default=3, help="Few-shot examples sampled from train split.")
     ap.add_argument("--max_test", type=int, default=100, help="Max test examples per task.")
     ap.add_argument("--seed", type=int, default=7)
-    ap.add_argument("--model", default="deepseek-ai/deepseek-prover-v2-671b")
+    ap.add_argument("--model", default="deepseek-ai/DeepSeek-Prover-V2-671B:novita")
     ap.add_argument("--out_dir", default="runs")
     ap.add_argument("--http_referer", default=os.environ.get("OPENROUTER_HTTP_REFERER"))
     ap.add_argument("--x_title", default=os.environ.get("OPENROUTER_X_TITLE", "legalbench-eval"))

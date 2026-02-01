@@ -3,6 +3,10 @@ import re
 import json
 from typing import Any, Dict, List, Optional
 from openai import OpenAI
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv(override=True)
 
 class OpenAICompatibleChatClient:
     def __init__(self, model: str, http_referer: Optional[str] = None, x_title: Optional[str] = None):
@@ -22,19 +26,37 @@ class OpenAICompatibleChatClient:
         )
 
     def complete(self, messages: List[Dict[str, Any]], **kwargs: Any) -> str:
-        # We use the 'extra_body' parameter but we structure it specifically
-        # to ensure the 'provider' object is at the top level of the JSON request.
+        # Check if model name already includes a provider (format: "model:provider")
+        model_has_provider = ":" in self.model
         
-        # Merge your evaluation kwargs with our provider force
-        request_params = {
-            "model": self.model,
-            "messages": messages,
-            "extra_body": {
-                "provider": {
+        # Check if provider is already specified in kwargs
+        has_provider_in_kwargs = (
+            "provider" in kwargs or 
+            (kwargs.get("extra_body") and "provider" in kwargs.get("extra_body", {}))
+        )
+        
+        # Only add provider config if:
+        # 1. Model name doesn't already specify a provider
+        # 2. No provider is specified in kwargs
+        # 3. For DeepSeek Prover models, prefer novita/azure if available
+        if not model_has_provider and not has_provider_in_kwargs:
+            # Check if this is a DeepSeek Prover model that might need provider routing
+            if "deepseek-prover" in self.model.lower():
+                # For Prover models, try novita/azure providers
+                # Merge with existing extra_body if present
+                extra_body = kwargs.get("extra_body", {}).copy()
+                extra_body["provider"] = {
                     "order": ["novita", "azure"],
                     "allow_fallbacks": True
                 }
-            },
+                kwargs["extra_body"] = extra_body
+            # For other models (like deepseek-r1), let OpenRouter choose the provider
+            # by not specifying provider config
+        
+        # Build request params
+        request_params = {
+            "model": self.model,
+            "messages": messages,
             **kwargs
         }
 
