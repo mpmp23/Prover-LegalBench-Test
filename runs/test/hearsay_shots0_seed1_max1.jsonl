@@ -1,0 +1,1 @@
+{"task": "hearsay", "i": 0, "gold": "No", "raw": "ERROR_API_CALL: Error code: 404 - {'error': {'message': 'No allowed providers are available for the selected model.', 'code': 404, 'metadata': {'available_providers': ['novita', 'azure'], 'requested_providers': ['deepseek']}}}", "pred": "No", "correct": true}
