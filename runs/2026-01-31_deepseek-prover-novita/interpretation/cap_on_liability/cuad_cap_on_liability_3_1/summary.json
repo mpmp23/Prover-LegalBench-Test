@@ -1,0 +1,9 @@
+{
+  "model": "deepseek-ai/DeepSeek-Prover-V2-671B:novita",
+  "tasks": {
+    "cuad_cap_on_liability": {
+      "n": 100,
+      "accuracy": 1.0
+    }
+  }
+}

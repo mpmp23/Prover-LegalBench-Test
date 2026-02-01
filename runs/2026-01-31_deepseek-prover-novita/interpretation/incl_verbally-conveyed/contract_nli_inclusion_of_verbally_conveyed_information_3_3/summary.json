@@ -1,0 +1,9 @@
+{
+  "model": "deepseek-ai/DeepSeek-Prover-V2-671B:novita",
+  "tasks": {
+    "contract_nli_inclusion_of_verbally_conveyed_information": {
+      "n": 100,
+      "accuracy": 0.69
+    }
+  }
+}

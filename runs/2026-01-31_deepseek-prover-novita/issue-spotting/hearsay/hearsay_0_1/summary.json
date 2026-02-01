@@ -1,0 +1,9 @@
+{
+  "model": "deepseek-ai/DeepSeek-Prover-V2-671B:novita",
+  "tasks": {
+    "hearsay": {
+      "n": 94,
+      "accuracy": 0.925531914893617
+    }
+  }
+}

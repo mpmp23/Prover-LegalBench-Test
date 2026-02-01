@@ -1,0 +1,9 @@
+{
+  "model": "deepseek-ai/DeepSeek-Prover-V2-671B:novita",
+  "tasks": {
+    "cuad_audit_rights": {
+      "n": 100,
+      "accuracy": 0.96
+    }
+  }
+}

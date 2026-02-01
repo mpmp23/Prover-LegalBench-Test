@@ -6,7 +6,7 @@ from typing import Any, Dict, List
 
 from datasets import load_dataset
 
-from openrouter_client import OpenRouterChatClient
+from openrouter_client import OpenAICompatibleChatClient
 from task_configs import TASKS
 from eval_utils import build_prompt, pick_fewshot, infer_label_key
 
@@ -18,7 +18,7 @@ def main() -> None:
     ap.add_argument("--n_shots", type=int, default=3, help="Few-shot examples sampled from train split.")
     ap.add_argument("--max_test", type=int, default=100, help="Max test examples per task.")
     ap.add_argument("--seed", type=int, default=7)
-    ap.add_argument("--model", default="deepseek/deepseek-prover-v2")
+    ap.add_argument("--model", default="deepseek-ai/DeepSeek-Prover-V2-671B:novita")
     ap.add_argument("--out_dir", default="runs")
     ap.add_argument("--http_referer", default=os.environ.get("OPENROUTER_HTTP_REFERER"))
     ap.add_argument("--x_title", default=os.environ.get("OPENROUTER_X_TITLE", "legalbench-eval"))
@@ -26,11 +26,10 @@ def main() -> None:
 
     os.makedirs(args.out_dir, exist_ok=True)
 
-    client = OpenRouterChatClient(
+    client = OpenAICompatibleChatClient(
         model=args.model,
-        http_referer=args.http_referer,
-        x_title=args.x_title,
     )
+
 
     summary: Dict[str, Any] = {"model": args.model, "tasks": {}}
 
@@ -39,7 +38,8 @@ def main() -> None:
             raise ValueError(f"Task '{task_name}' not in TASKS config. Add it in task_configs.py.")
         task = TASKS[task_name]
 
-        ds = load_dataset("nguha/legalbench", task_name)
+        ds = load_dataset("nguha/legalbench", task_name, trust_remote_code=True)
+
         train = list(ds["train"])
         test = list(ds["test"])
 
@@ -90,10 +90,15 @@ def main() -> None:
             "accuracy": acc,
         }
 
-        out_path = os.path.join(args.out_dir, f"{task_name}.jsonl")
+        out_path = os.path.join(
+        args.out_dir,
+        f"{task_name}_shots{args.n_shots}_seed{args.seed}_max{args.max_test}.jsonl"
+    )
+        
+        # Write per-example results
         with open(out_path, "w", encoding="utf-8") as f:
-            for r in rows:
-                f.write(json.dumps(r, ensure_ascii=False) + "\n")
+            for row in rows:
+                f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
         print(f"[{task_name}] accuracy={acc:.3f} (n={total}) -> {out_path}")
 

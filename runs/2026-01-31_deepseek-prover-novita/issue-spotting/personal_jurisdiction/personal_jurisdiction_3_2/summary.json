@@ -1,0 +1,9 @@
+{
+  "model": "deepseek-ai/DeepSeek-Prover-V2-671B:novita",
+  "tasks": {
+    "personal_jurisdiction": {
+      "n": 50,
+      "accuracy": 1.0
+    }
+  }
+}

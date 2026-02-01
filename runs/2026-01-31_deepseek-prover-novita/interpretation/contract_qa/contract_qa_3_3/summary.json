@@ -1,0 +1,9 @@
+{
+  "model": "deepseek-ai/DeepSeek-Prover-V2-671B:novita",
+  "tasks": {
+    "contract_qa": {
+      "n": 80,
+      "accuracy": 0.9875
+    }
+  }
+}

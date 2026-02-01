@@ -8,10 +8,10 @@ This is a minimal evaluation harness for a recommended subset of LegalBench task
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-export OPENROUTER_API_KEY="..."
+export HF_TOKEN="TOKEN_HERE"
 # Optional attribution headers:
-export OPENROUTER_HTTP_REFERER="https://yourapp.com"
-export OPENROUTER_X_TITLE="my-legalbench-prover-run"
+export OPENROUTER_HTTP_REFERER=deepseek/deepseek-prover-v2
+export OPENROUTER_X_TITLE=DeepSeek: DeepSeek Prover V2
 ```
 
 ## Run

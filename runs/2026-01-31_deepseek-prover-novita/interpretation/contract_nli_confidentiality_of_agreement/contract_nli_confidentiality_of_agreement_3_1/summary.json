@@ -1,0 +1,9 @@
+{
+  "model": "deepseek-ai/DeepSeek-Prover-V2-671B:novita",
+  "tasks": {
+    "contract_nli_confidentiality_of_agreement": {
+      "n": 82,
+      "accuracy": 0.9390243902439024
+    }
+  }
+}

@@ -1,56 +1,33 @@
 import os
 from typing import List, Dict, Any, Optional
 
-try:
-    from openai import OpenAI
-except Exception as e:  # pragma: no cover
-    raise RuntimeError(
-        "Missing dependency 'openai'. Install with: pip install openai"
-    ) from e
+from openai import OpenAI
 
 
-class OpenRouterChatClient:
-    """Small wrapper for OpenRouter's OpenAI-compatible Chat Completions API."""
+from openai import OpenAI
+import os
 
-    def __init__(
-        self,
-        api_key: Optional[str] = None,
-        base_url: str = "https://openrouter.ai/api/v1",
-        model: str = "deepseek/deepseek-prover-v2",
-        http_referer: Optional[str] = None,
-        x_title: Optional[str] = None,
-    ):
-        self.api_key = api_key or os.environ.get("OPENROUTER_API_KEY")
-        if not self.api_key:
-            raise ValueError(
-                "OPENROUTER_API_KEY is not set. Export it or pass api_key=..."
-            )
-
-        default_headers: Dict[str, str] = {}
-        if http_referer:
-            default_headers["HTTP-Referer"] = http_referer
-        if x_title:
-            default_headers["X-Title"] = x_title
-
-        self.client = OpenAI(
-            api_key=self.api_key,
-            base_url=base_url,
-            default_headers=default_headers if default_headers else None,
-        )
+class OpenAICompatibleChatClient:
+    def __init__(self, model: str):
         self.model = model
 
-    def complete(
-        self,
-        messages: List[Dict[str, str]],
-        temperature: float = 0.0,
-        max_tokens: Optional[int] = None,
-        **kwargs: Any,
-    ) -> str:
-        resp = self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            **kwargs,
-        )
-        return (resp.choices[0].message.content or "").strip()
+        # Use OpenRouter if you're passing an OpenRouter model id like "deepseek/deepseek-r1"
+        if "/" in model and model.startswith("deepseek/"):
+            api_key = os.environ.get("OPENROUTER_API_KEY")
+            if not api_key:
+                raise ValueError("OPENROUTER_API_KEY is not set. Run: export OPENROUTER_API_KEY='sk-or-...'")
+
+            self.client = OpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=api_key,
+            )
+        else:
+            # Otherwise default to HF router (your current working setup)
+            api_key = os.environ.get("HF_TOKEN")
+            if not api_key:
+                raise ValueError("HF_TOKEN is not set. Run: export HF_TOKEN='hf_...'")
+
+            self.client = OpenAI(
+                base_url="https://router.huggingface.co/v1",
+                api_key=api_key,
+            )
