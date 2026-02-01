@@ -10,6 +10,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 export HF_TOKEN="TOKEN_HERE"
 # Optional attribution headers:
+export OPENROUTER_API_KEY="KEY_HERE"
 export OPENROUTER_HTTP_REFERER=deepseek/deepseek-prover-v2
 export OPENROUTER_X_TITLE=DeepSeek: DeepSeek Prover V2
 ```
