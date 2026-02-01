@@ -250,21 +250,28 @@ def add_all_non_manual_tasks_to_TASKS(
     Adds all LegalBench configs that look auto-gradable (discrete label sets)
     to TASKS, without touching tasks you already defined manually above.
     """
+    print("[auto-discovery] Fetching LegalBench config names...", flush=True)
     config_names = get_dataset_config_names(dataset_id)
+    print(f"[auto-discovery] Found {len(config_names)} configs. Probing each one...", flush=True)
 
     # Explicitly exclude known manual/open-gen anchor
     explicit_exclude = {"rule_qa"}
 
-    for cfg in config_names:
+    added = 0
+    skipped = 0
+    for idx, cfg in enumerate(config_names, 1):
         if cfg in TASKS:
+            skipped += 1
             continue
         if cfg in explicit_exclude:
+            skipped += 1
             continue
 
         try:
             ds = load_dataset(dataset_id, cfg, trust_remote_code=trust_remote_code)
         except Exception:
-            # Skip configs that can't be loaded in this environment
+            print(f"[auto-discovery] ({idx}/{len(config_names)}) {cfg}: failed to load, skipping", flush=True)
+            skipped += 1
             continue
 
         if "test" not in ds or len(ds["test"]) == 0:
@@ -289,7 +296,7 @@ def add_all_non_manual_tasks_to_TASKS(
                 label_values.append(str(v))
 
         if _looks_open_generation(label_values):
-            # Likely rule-application or other manual/open-gen tasks
+            skipped += 1
             continue
 
         labels = sorted(set(label_values))
@@ -304,8 +311,14 @@ def add_all_non_manual_tasks_to_TASKS(
                 + instruction_suffix
             ),
         )
+        added += 1
+        if added % 10 == 0:
+            print(f"[auto-discovery] ({idx}/{len(config_names)}) {added} tasks added so far...", flush=True)
+
+    print(f"[auto-discovery] Done. Added {added} tasks, skipped {skipped}. Total TASKS: {len(TASKS)}", flush=True)
 
 
-# Auto-populate on import so run_eval.py can use any auto-gradable task name.
-add_all_non_manual_tasks_to_TASKS()
+# Call add_all_non_manual_tasks_to_TASKS() explicitly if you want auto-discovery.
+# It is NOT run at import time because it downloads every LegalBench config from
+# HuggingFace (~160+ datasets), which is slow and produces no output.
 

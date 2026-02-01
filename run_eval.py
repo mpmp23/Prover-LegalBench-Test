@@ -7,7 +7,7 @@ from typing import Any, Dict, List
 from datasets import load_dataset
 
 from openrouter_client import OpenAICompatibleChatClient
-from task_configs import TASKS
+from task_configs import TASKS, add_all_non_manual_tasks_to_TASKS
 from eval_utils import build_prompt, pick_fewshot, infer_label_key
 
 
@@ -22,34 +22,48 @@ def main() -> None:
     ap.add_argument("--out_dir", default="runs")
     ap.add_argument("--http_referer", default=os.environ.get("OPENROUTER_HTTP_REFERER"))
     ap.add_argument("--x_title", default=os.environ.get("OPENROUTER_X_TITLE", "legalbench-eval"))
+    ap.add_argument("--discover_all", action="store_true",
+                    help="Auto-discover all LegalBench tasks from HuggingFace (slow; downloads ~160+ configs).")
     args = ap.parse_args()
+
+    if args.discover_all:
+        add_all_non_manual_tasks_to_TASKS()
 
     os.makedirs(args.out_dir, exist_ok=True)
 
+    print(f"Starting evaluation with model: {args.model}", flush=True)
+    print(f"Tasks: {args.tasks}", flush=True)
+    print(f"Output directory: {args.out_dir}", flush=True)
+    print("", flush=True)
+
     # Initialize the client
+    print("Initializing OpenRouter client...", flush=True)
     client = OpenAICompatibleChatClient(
         model=args.model,
         http_referer=args.http_referer,
         x_title=args.x_title
     )
+    print("✓ Client initialized", flush=True)
+    print("", flush=True)
 
     summary: Dict[str, Any] = {"model": args.model, "tasks": {}}
 
     for task_name in args.tasks:
         if task_name not in TASKS:
-            print(f"Skipping '{task_name}': not in TASKS config.")
+            print(f"Skipping '{task_name}': not in TASKS config.", flush=True)
             continue
         
         task = TASKS[task_name]
 
         # 1. Load the dataset for this specific task
-        print(f"[{task_name}] Loading dataset...")
+        print(f"[{task_name}] Loading dataset from HuggingFace (this may take 10-30 seconds)...", flush=True)
         ds = load_dataset("nguha/legalbench", task_name, trust_remote_code=True)
+        print(f"[{task_name}] ✓ Dataset loaded", flush=True)
         train = list(ds["train"])
         test = list(ds["test"])
 
         if not test:
-            print(f"[{task_name}] No test split found; skipping.")
+            print(f"[{task_name}] No test split found; skipping.", flush=True)
             continue
 
         # 2. Reset counters and setup paths for this task
@@ -67,13 +81,13 @@ def main() -> None:
 
         label_key = infer_label_key(test[0])
         if not label_key:
-            print(f"[{task_name}] Could not infer label key; skipping.")
+            print(f"[{task_name}] Could not infer label key; skipping.", flush=True)
             continue
 
         fewshot = pick_fewshot(train, args.n_shots, args.seed, label_key=label_key)
 
         # 3. Evaluation Loop
-        print(f"[{task_name}] Starting eval (max={args.max_test})...")
+        print(f"[{task_name}] Starting eval (max={args.max_test})...", flush=True)
         for i, ex in enumerate(test[: args.max_test]):
             gold = ex[label_key]
             prompt = build_prompt(task, ex, fewshot, label_key=label_key)
@@ -87,7 +101,7 @@ def main() -> None:
                 # Attempt API call
                 raw = client.complete(messages, temperature=0.0)
             except Exception as e:
-                print(f"[{task_name}] Error on example {i}: {e}")
+                print(f"[{task_name}] Error on example {i}: {e}", flush=True)
                 raw = f"ERROR_API_CALL: {str(e)}"
 
             # Process the prediction
@@ -113,7 +127,7 @@ def main() -> None:
                 f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
             if (i + 1) % 10 == 0:
-                print(f"[{task_name}] {i+1}/{min(len(test), args.max_test)} processed...")
+                print(f"[{task_name}] {i+1}/{min(len(test), args.max_test)} processed...", flush=True)
 
         # 4. Finalize Task Stats
         acc = correct / total if total else 0.0
@@ -121,14 +135,15 @@ def main() -> None:
             "n": total,
             "accuracy": acc,
         }
-        print(f"[{task_name}] Completed. Accuracy: {acc:.3f}")
+        print(f"[{task_name}] Completed. Accuracy: {acc:.3f}", flush=True)
+        print("", flush=True)
 
     # Write the final summary
     summary_path = os.path.join(args.out_dir, "summary.json")
     with open(summary_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
 
-    print(f"\nEvaluation finished. Summary written to {summary_path}")
+    print(f"✓ Evaluation finished. Summary written to {summary_path}", flush=True)
 
 
 if __name__ == "__main__":
