@@ -1,0 +1,9 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "privacy_policy_entailment": {
+      "n": 100,
+      "accuracy": 0.57
+    }
+  }
+}

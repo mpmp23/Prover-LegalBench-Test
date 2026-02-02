@@ -1,0 +1,6 @@
+{"task": "insurance_policy_interpretation", "i": 0, "gold": "A", "raw": "A", "pred": "A", "correct": true}
+{"task": "insurance_policy_interpretation", "i": 1, "gold": "A", "raw": "A", "pred": "A", "correct": true}
+{"task": "insurance_policy_interpretation", "i": 2, "gold": "C", "raw": "A", "pred": "A", "correct": false}
+{"task": "insurance_policy_interpretation", "i": 3, "gold": "B", "raw": "B", "pred": "B", "correct": true}
+{"task": "insurance_policy_interpretation", "i": 4, "gold": "B", "raw": "B", "pred": "B", "correct": true}
+{"task": "insurance_policy_interpretation", "i": 5, "gold": "C", "raw": "B", "pred": "B", "correct": false}

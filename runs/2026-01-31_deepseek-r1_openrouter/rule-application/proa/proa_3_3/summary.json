@@ -1,0 +1,9 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "proa": {
+      "n": 95,
+      "accuracy": 0.9789473684210527
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "consumer_contracts_qa": {
+      "n": 100,
+      "accuracy": 0.91
+    }
+  }
+}
