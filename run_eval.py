@@ -9,6 +9,9 @@ from datasets import load_dataset
 from openrouter_client import OpenAICompatibleChatClient
 from task_configs import TASKS, add_all_non_manual_tasks_to_TASKS
 from eval_utils import build_prompt, pick_fewshot, infer_label_key
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 
 def main() -> None:

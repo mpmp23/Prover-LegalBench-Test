@@ -1,0 +1,9 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "hearsay": {
+      "n": 94,
+      "accuracy": 0.9787234042553191
+    }
+  }
+}

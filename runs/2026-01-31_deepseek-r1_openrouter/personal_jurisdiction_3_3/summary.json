@@ -1,0 +1,9 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "personal_jurisdiction": {
+      "n": 50,
+      "accuracy": 0.94
+    }
+  }
+}
