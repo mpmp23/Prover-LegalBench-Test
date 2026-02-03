@@ -1,6 +1,6 @@
-# LegalBench + DeepSeek-Prover-V2 (OpenRouter) starter harness
+# LegalBench + DeepSeek-Prover-V2 (OpenRouter) starter benchmarks
 
-This is a minimal evaluation harness for a recommended subset of LegalBench tasks.
+This is a minimal evaluation test for a recommended subset of LegalBench tasks.
 
 ## Setup
 
