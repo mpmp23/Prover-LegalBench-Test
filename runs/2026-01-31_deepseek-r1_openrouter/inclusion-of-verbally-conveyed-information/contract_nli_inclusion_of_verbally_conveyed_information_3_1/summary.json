@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "contract_nli_inclusion_of_verbally_conveyed_information": {
+      "n": 100,
+      "correct": 84,
+      "accuracy": 0.84
+    }
+  }
+}
