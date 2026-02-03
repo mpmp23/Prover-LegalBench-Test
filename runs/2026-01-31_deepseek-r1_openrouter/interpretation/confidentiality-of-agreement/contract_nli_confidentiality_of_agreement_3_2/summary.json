@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "contract_nli_confidentiality_of_agreement": {
+      "n": 82,
+      "correct": 63,
+      "accuracy": 0.7682926829268293
+    }
+  }
+}
