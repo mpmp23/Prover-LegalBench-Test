@@ -37,6 +37,8 @@ python run_eval.py --model "openai/gpt-4" --tasks hearsay personal_jurisdiction 
 
 Results are written to `runs/<task>.jsonl` and `runs/summary.json`.
 
+And, I'd add in run_eval.py --discover_all once to load in all of your tests ahead of that aren't teh five manually added to task_configs.
+
 ## Model Support
 
 The client automatically handles provider routing:

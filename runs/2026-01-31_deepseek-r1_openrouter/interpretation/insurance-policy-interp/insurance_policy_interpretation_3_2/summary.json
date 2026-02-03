@@ -1,0 +1,9 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "insurance_policy_interpretation": {
+      "n": 100,
+      "accuracy": 0.58
+    }
+  }
+}

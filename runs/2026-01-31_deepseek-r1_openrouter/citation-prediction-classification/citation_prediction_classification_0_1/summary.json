@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "citation_prediction_classification": {
+      "n": 100,
+      "correct": 68,
+      "accuracy": 0.68
+    }
+  }
+}

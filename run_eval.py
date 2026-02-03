@@ -29,6 +29,13 @@ def main() -> None:
                     help="Auto-discover all LegalBench tasks from HuggingFace (slow; downloads ~160+ configs).")
     args = ap.parse_args()
 
+    # If the user requested any tasks that aren't in the manual TASKS set,
+    # auto-discover the full LegalBench list so those tasks become available.
+    missing = [t for t in args.tasks if t not in TASKS]
+    if missing:
+        print(f"Some requested tasks are not in TASKS ({missing}); running auto-discovery...", flush=True)
+        add_all_non_manual_tasks_to_TASKS()
+
     if args.discover_all:
         add_all_non_manual_tasks_to_TASKS()
 
@@ -133,13 +140,16 @@ def main() -> None:
                 print(f"[{task_name}] {i+1}/{min(len(test), args.max_test)} processed...", flush=True)
 
         # 4. Finalize Task Stats
-        acc = correct / total if total else 0.0
+        acc = correct / total if total > 0 else 0.0
+
         summary["tasks"][task_name] = {
             "n": total,
+            "correct": correct,
             "accuracy": acc,
         }
+
         print(f"[{task_name}] Completed. Accuracy: {acc:.3f}", flush=True)
-        print("", flush=True)
+
 
     # Write the final summary
     summary_path = os.path.join(args.out_dir, "summary.json")
