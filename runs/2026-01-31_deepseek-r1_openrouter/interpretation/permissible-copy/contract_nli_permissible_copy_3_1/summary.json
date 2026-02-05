@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "contract_nli_permissible_copy": {
+      "n": 87,
+      "correct": 67,
+      "accuracy": 0.7701149425287356
+    }
+  }
+}

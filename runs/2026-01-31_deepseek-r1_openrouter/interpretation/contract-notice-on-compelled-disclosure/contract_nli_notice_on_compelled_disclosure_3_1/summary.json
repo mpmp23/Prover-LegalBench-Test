@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "contract_nli_notice_on_compelled_disclosure": {
+      "n": 100,
+      "correct": 100,
+      "accuracy": 1.0
+    }
+  }
+}

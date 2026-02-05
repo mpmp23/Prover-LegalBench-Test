@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "contract_nli_sharing_with_employees": {
+      "n": 100,
+      "correct": 84,
+      "accuracy": 0.84
+    }
+  }
+}

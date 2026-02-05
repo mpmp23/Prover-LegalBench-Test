@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "contract_nli_permissible_post-agreement_possession": {
+      "n": 100,
+      "correct": 37,
+      "accuracy": 0.37
+    }
+  }
+}

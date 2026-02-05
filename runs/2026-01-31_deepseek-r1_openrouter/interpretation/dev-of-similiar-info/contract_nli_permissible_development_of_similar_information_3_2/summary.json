@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "contract_nli_permissible_development_of_similar_information": {
+      "n": 100,
+      "correct": 93,
+      "accuracy": 0.93
+    }
+  }
+}
