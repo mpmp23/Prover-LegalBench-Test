@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "cuad_affiliate_license-licensor": {
+      "n": 88,
+      "correct": 75,
+      "accuracy": 0.8522727272727273
+    }
+  }
+}

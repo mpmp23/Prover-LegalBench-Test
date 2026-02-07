@@ -1,0 +1,10 @@
+{
+  "model": "deepseek/deepseek-r1",
+  "tasks": {
+    "cuad_anti-assignment": {
+      "n": 100,
+      "correct": 86,
+      "accuracy": 0.86
+    }
+  }
+}
